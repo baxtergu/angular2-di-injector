@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ReflectiveInjector } from '@angular/core';
+import { MyService } from './services/my.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,20 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app works!';
+  myService: MyService;
+  // myOtherService: MyService;
+
+  constructor() {
+    let injector: any = ReflectiveInjector.resolveAndCreate([MyService]);
+    this.myService = injector.get(MyService);
+    console.log('Same instance?', this.myService === injector.get(MyService));
+
+    // let otherInjactor: any = ReflectiveInjector.resolveAndCreate([MyService]);
+    // this.myOtherService = otherInjactor.get(MyService);    
+    // console.log('Same instance?', this.myService === this.myOtherService);
+  }
+
+  invokeService(): void {
+    console.log('MyService returned', this.myService.getValue());
+  }
 }
